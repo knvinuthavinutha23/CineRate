@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}
+CineRate - Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<main class="dashboard-page">
+
+    <div class="dashboard-heading">
+
+        <p class="small-heading">
+            MY ACCOUNT
+        </p>
+
+        <h1>
+            Welcome, {{ session["user_name"] }}!
+        </h1>
+
+        <p>
+            Your CineRate activity.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                👤
+            </div>
+
+            <h3>
+                Profile
+            </h3>
+
+            <p>
+                {{ session["user_email"] }}
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                ⭐
+            </div>
+
+            <h3>
+                Ratings
+            </h3>
+
+            <p class="dashboard-number">
+                {{ rating_count }}
+            </p>
+
+            <span>
+                Movies rated
+            </span>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                💬
+            </div>
+
+            <h3>
+                Reviews
+            </h3>
+
+            <p class="dashboard-number">
+                {{ review_count }}
+            </p>
+
+            <span>
+                Reviews written
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    {% if recent_ratings %}
+
+        <section class="recent-section">
+
+            <h2>
+                Recent Ratings
+            </h2>
+
+
+            <div class="recent-list">
+
+                {% for item in recent_ratings %}
+
+                    <div class="recent-item">
+
+                        <span>
+                            {{ item.title }}
+                        </span>
+
+                        <strong>
+                            {{ item.rating }} ★
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+
+    <div class="dashboard-actions">
+
+        <a href="/movies"
+           class="primary-button">
+
+            Explore Movies →
+
+        </a>
+
+        <a href="/logout"
+           class="logout-button">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ movie.title }} - CineRate
+{% endblock %}
+
+
+{% block content %}
+
+<main class="details-page">
+
+
+    <a href="/movies"
+       class="back-button">
+
+        ← Back to Movies
+
+    </a>
+
+
+    <!-- Movie information -->
+
+    <section class="movie-detail-card">
+
+        <div class="detail-header">
+
+            <div>
+
+                <span class="detail-language">
+                    {{ movie.language }}
+                </span>
+
+                <h1>
+                    {{ movie.title }}
+                </h1>
+
+                <p class="detail-year">
+                    Released in {{ movie.release_year }}
+                </p>
+
+            </div>
+
+
+            <div class="big-rating">
+
+                {% if movie.average_rating %}
+
+                    <span class="big-star">
+                        ★
+                    </span>
+
+                    <span class="rating-number">
+                        {{ movie.average_rating }}
+                    </span>
+
+                    <span class="rating-out-of">
+                        / 5
+                    </span>
+
+                {% else %}
+
+                    <span>
+                        No ratings yet
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-meta">
+
+            <div>
+
+                <span class="meta-label">
+                    Genre
+                </span>
+
+                <span class="meta-value">
+                    {{ movie.genres }}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <span class="meta-label">
+                    Duration
+                </span>
+
+                <span class="meta-value">
+                    {{ movie.duration }} minutes
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <span class="meta-label">
+                    Ratings
+                </span>
+
+                <span class="meta-value">
+                    {{ movie.rating_count }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="description-section">
+
+            <h2>
+                About the Movie
+            </h2>
+
+            <p>
+                {{ movie.description }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Rating -->
+
+    <section class="interaction-card">
+
+        <h2>
+            Rate This Movie
+        </h2>
+
+
+        {% if session.get("user_id") %}
+
+            <form
+                method="POST"
+                action="/movie/{{ movie.movie_id }}/rate"
+                class="rating-form">
+
+                <label>
+                    Select your rating
+                </label>
+
+
+                <div class="rating-options">
+
+                    {% for number in range(1, 6) %}
+
+                        <label class="rating-option">
+
+                            <input
+                                type="radio"
+                                name="rating"
+                                value="{{ number }}"
+                                {% if user_rating == number %}
+                                    checked
+                                {% endif %}
+                                required>
+
+                            <span>
+                                {{ number }} ★
+                            </span>
+
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-button">
+
+                    {% if user_rating %}
+                        Update Rating
+                    {% else %}
+                        Submit Rating
+                    {% endif %}
+
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <p class="login-message">
+
+                Please
+
+                <a href="/login">
+                    login
+                </a>
+
+                to rate this movie.
+
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- Add Review -->
+
+    <section class="interaction-card">
+
+        <h2>
+            Write a Review
+        </h2>
+
+
+        {% if session.get("user_id") %}
+
+            <form
+                method="POST"
+                action="/movie/{{ movie.movie_id }}/review">
+
+                <textarea
+                    name="review_text"
+                    rows="5"
+                    placeholder="Share your thoughts about this movie..."
+                    required></textarea>
+
+
+                <button
+                    type="submit"
+                    class="auth-button">
+
+                    Submit Review
+
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <p class="login-message">
+
+                Please
+
+                <a href="/login">
+                    login
+                </a>
+
+                to write a review.
+
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- Reviews -->
+
+    <section class="reviews-section">
+
+        <div class="reviews-heading">
+
+            <h2>
+                User Reviews
+            </h2>
+
+            <span>
+                {{ reviews|length }} reviews
+            </span>
+
+        </div>
+
+
+        {% if reviews %}
+
+            {% for review in reviews %}
+
+                <div class="review-card">
+
+                    <div class="review-header">
+
+                        <div class="review-user">
+
+                            👤
+
+                            <strong>
+                                {{ review.name }}
+                            </strong>
+
+                        </div>
+
+                        <span class="review-date">
+                            {{ review.created_at }}
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        {{ review.review_text }}
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="no-reviews">
+
+                <p>
+                    No reviews yet. Be the first to review this movie!
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+{% endblock %}

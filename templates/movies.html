@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+CineRate - Movies
+{% endblock %}
+
+
+{% block content %}
+
+<main class="movies-page">
+
+    <div class="page-heading">
+
+        <p class="small-heading">
+            CATALOG
+        </p>
+
+        <h1>
+            Explore Movies
+        </h1>
+
+        <p>
+            Find your next favorite movie.
+        </p>
+
+    </div>
+
+
+    <!-- Search and Filter -->
+
+    <form method="GET"
+          action="/movies"
+          class="filter-form">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search movies...">
+
+
+        <select name="language">
+
+            <option value="">
+                All Languages
+            </option>
+
+            {% for language in languages %}
+
+                <option
+                    value="{{ language.language }}"
+                    {% if selected_language == language.language %}
+                        selected
+                    {% endif %}>
+
+                    {{ language.language }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button type="submit">
+            Search
+        </button>
+
+
+        <a href="/movies"
+           class="clear-button">
+
+            Clear
+
+        </a>
+
+    </form>
+
+
+
+    {% if movies %}
+
+        <div class="movie-grid">
+
+            {% for movie in movies %}
+
+                <div class="movie-card">
+
+
+                    <div class="movie-top">
+
+                        <span class="movie-language">
+                            {{ movie.language }}
+                        </span>
+
+                        <span class="movie-year">
+                            {{ movie.release_year }}
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="/movie/{{ movie.movie_id }}"
+                        class="movie-title-link">
+
+                        <h2>
+                            {{ movie.title }}
+                        </h2>
+
+                    </a>
+
+
+                    <div class="movie-rating">
+
+                        {% if movie.average_rating %}
+
+                            <span class="star">
+                                ★
+                            </span>
+
+                            <strong>
+                                {{ movie.average_rating }}
+                            </strong>
+
+                            <span>
+                                / 5
+                            </span>
+
+                            <small>
+                                ({{ movie.rating_count }})
+                            </small>
+
+                        {% else %}
+
+                            <span>
+                                No ratings yet
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <p class="movie-description">
+
+                        {{ movie.description }}
+
+                    </p>
+
+
+                    <div class="movie-details">
+
+                        <div>
+
+                            <span class="detail-label">
+                                Genre
+                            </span>
+
+                            <span class="detail-value">
+                                {{ movie.genres }}
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="detail-label">
+                                Duration
+                            </span>
+
+                            <span class="detail-value">
+                                {{ movie.duration }} min
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="/movie/{{ movie.movie_id }}"
+                        class="details-button">
+
+                        View Details →
+
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>
+                No movies found
+            </h2>
+
+            <p>
+                Try another search or language.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}
